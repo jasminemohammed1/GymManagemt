@@ -16,7 +16,7 @@ namespace WebApplication1
             builder.Services.AddScoped<IPlanRepository, PlanRepository>();
             builder.Services.AddDbContext<GymDBContext>(options =>
             {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefualtConnection"));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
          
 
