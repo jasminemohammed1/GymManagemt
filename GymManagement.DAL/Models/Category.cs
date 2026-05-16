@@ -9,5 +9,6 @@ namespace GymManagement.DAL.Models
     public  class Category : BaseEntity
     {
         public string CategoryName { get; set; } = default!;
+        public ICollection<Sessions> Sessions { get; set; } = new List<Sessions>();
     }
 }

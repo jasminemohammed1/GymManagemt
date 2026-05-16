@@ -14,5 +14,7 @@ namespace GymManagement.DAL.Models
         public DateTime EndDate { get; set; }
 
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+        public Category Category { get; set; } = null!;
+        public int CategoryId { get; set; }
     }
 }
