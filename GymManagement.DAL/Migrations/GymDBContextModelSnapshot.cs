@@ -66,6 +66,35 @@ namespace GYMProject.Migrations
                         });
                 });
 
+            modelBuilder.Entity("GymManagement.DAL.Models.Booking", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("BookingDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsAttended")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("MemberId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SessionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MemberId");
+
+                    b.HasIndex("SessionId");
+
+                    b.ToTable("Booking");
+                });
+
             modelBuilder.Entity("GymManagement.DAL.Models.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -105,6 +134,9 @@ namespace GYMProject.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("HealthRecordMemberId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Height")
                         .HasColumnType("decimal(18,2)");
 
@@ -118,6 +150,9 @@ namespace GYMProject.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("HealthRecordMemberId")
+                        .IsUnique();
 
                     b.ToTable("HealthRecords");
                 });
@@ -177,6 +212,35 @@ namespace GYMProject.Migrations
 
                             t.HasCheckConstraint("PhoneCheck", "Phone like '010%' or Phone like '012%' or Phone like '015%' or Phone like '011%' or Phone like '010%'");
                         });
+                });
+
+            modelBuilder.Entity("GymManagement.DAL.Models.MemberShips", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MemberId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PlanId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MemberId");
+
+                    b.HasIndex("PlanId");
+
+                    b.ToTable("MemberShips");
                 });
 
             modelBuilder.Entity("GymManagement.DAL.Models.Sessions", b =>
@@ -275,6 +339,36 @@ namespace GYMProject.Migrations
                         });
                 });
 
+            modelBuilder.Entity("GymManagement.DAL.Models.Booking", b =>
+                {
+                    b.HasOne("GymManagement.DAL.Models.Member", "Member")
+                        .WithMany("Bookings")
+                        .HasForeignKey("MemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GymManagement.DAL.Models.Sessions", "Session")
+                        .WithMany("Bookings")
+                        .HasForeignKey("SessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Member");
+
+                    b.Navigation("Session");
+                });
+
+            modelBuilder.Entity("GymManagement.DAL.Models.HealthRecord", b =>
+                {
+                    b.HasOne("GymManagement.DAL.Models.Member", "HealthRecordMember")
+                        .WithOne("HealthRecord")
+                        .HasForeignKey("GymManagement.DAL.Models.HealthRecord", "HealthRecordMemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("HealthRecordMember");
+                });
+
             modelBuilder.Entity("GymManagement.DAL.Models.Member", b =>
                 {
                     b.OwnsOne("GymManagement.DAL.Models.Address", "Address", b1 =>
@@ -309,6 +403,25 @@ namespace GYMProject.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("GymManagement.DAL.Models.MemberShips", b =>
+                {
+                    b.HasOne("GymManagement.DAL.Models.Member", "Member")
+                        .WithMany("MemberShips")
+                        .HasForeignKey("MemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GYMProject.Models.Plan", "Plan")
+                        .WithMany("MemberShips")
+                        .HasForeignKey("PlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Member");
+
+                    b.Navigation("Plan");
+                });
+
             modelBuilder.Entity("GymManagement.DAL.Models.Trainer", b =>
                 {
                     b.OwnsOne("GymManagement.DAL.Models.Address", "Address", b1 =>
@@ -341,6 +454,26 @@ namespace GYMProject.Migrations
 
                     b.Navigation("Address")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("GYMProject.Models.Plan", b =>
+                {
+                    b.Navigation("MemberShips");
+                });
+
+            modelBuilder.Entity("GymManagement.DAL.Models.Member", b =>
+                {
+                    b.Navigation("Bookings");
+
+                    b.Navigation("HealthRecord")
+                        .IsRequired();
+
+                    b.Navigation("MemberShips");
+                });
+
+            modelBuilder.Entity("GymManagement.DAL.Models.Sessions", b =>
+                {
+                    b.Navigation("Bookings");
                 });
 #pragma warning restore 612, 618
         }

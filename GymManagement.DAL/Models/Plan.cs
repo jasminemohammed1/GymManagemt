@@ -11,5 +11,7 @@ namespace GYMProject.Models
        
         public decimal Price { get; set; }
         public bool IsActive { get; set; }
+
+        public ICollection<MemberShips> MemberShips { get; set; } = new List<MemberShips>();
     }
 }

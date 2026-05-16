@@ -23,6 +23,8 @@ namespace GymManagement.DAL.Configurations
                    .WithOne(x => x.HealthRecordMember)
                    .HasForeignKey<HealthRecord>(x => x.HealthRecordMemberId);
 
+            
+
         }
 
     }

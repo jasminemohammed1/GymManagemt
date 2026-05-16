@@ -21,6 +21,8 @@ namespace GYMProject.Configurations
             {
                 tb.HasCheckConstraint("PlanDurationCheck", "DurationDays between 1 and 365");
             });
+           
+
         }
     }
 }

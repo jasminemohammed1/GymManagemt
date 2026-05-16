@@ -12,5 +12,7 @@ namespace GymManagement.DAL.Models
          public int Capacity { get; set; }
         public DateTime StartDate {  get; set; }
         public DateTime EndDate { get; set; }
+
+        public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
     }
 }

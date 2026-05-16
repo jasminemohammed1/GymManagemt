@@ -11,6 +11,9 @@ namespace GymManagement.DAL.Models
         public string? Photo {  get; set; }
         //joinDate = createdAt
         public HealthRecord HealthRecord { get; set; }
+        public ICollection<MemberShips> MemberShips { get; set; } = new List<MemberShips>();
+        public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+
         
     }
 }
