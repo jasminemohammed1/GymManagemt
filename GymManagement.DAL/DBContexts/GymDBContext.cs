@@ -6,11 +6,16 @@ namespace GYMProject.DBContexts
 {
     public class GymDBContext : DbContext
     {
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("Server=.;DataBase=GymManagement;Trusted_Connection = True; TrustServerCertificate = True;");
 
+        public GymDBContext(DbContextOptions<GymDBContext> options) : base(options)
+        {
+            
         }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlServer("Server=.;DataBase=GymManagement;Trusted_Connection = True; TrustServerCertificate = True;");
+
+        //}
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration<Plan>(new PlanConfiguration());

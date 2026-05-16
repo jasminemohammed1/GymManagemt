@@ -10,8 +10,12 @@ namespace GYMProject.Controllers
 {
     public class PlansController : Controller
     {
-        private readonly IPlanRepository _planRepo = new PlanRepository();
-        
+        private readonly IPlanRepository _planRepo;
+        public PlansController(IPlanRepository plan)
+        {
+            _planRepo = plan;
+        }
+
         public async Task<IActionResult> Index(CancellationToken ct )
         {
            var plans = await  _planRepo.GetAllAsync(ct: ct );

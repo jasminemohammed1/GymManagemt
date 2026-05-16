@@ -7,12 +7,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Sources;
 
 namespace GymManagement.DAL.Repositories.Classes
 {
     public class PlanRepository : IPlanRepository
     {
-        private readonly  GymDBContext  _dbcontext  = new GymDBContext();
+        private readonly  GymDBContext  _dbcontext ;
+        public PlanRepository(GymDBContext db)
+        {
+            _dbcontext = db;    
+        }
+
+
         public async Task<int> AddAsync(Plan plnan, CancellationToken ct)
         {
             _dbcontext.Plans.Add(plnan);
