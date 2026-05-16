@@ -1,4 +1,5 @@
-﻿using GYMProject.Configurations;
+﻿using GymManagement.DAL.Models;
+using GYMProject.Configurations;
 using GYMProject.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,9 +19,15 @@ namespace GYMProject.DBContexts
         //}
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration<Plan>(new PlanConfiguration());
+           modelBuilder.ApplyConfigurationsFromAssembly(System.Reflection.Assembly.GetExecutingAssembly()); 
         }
         public DbSet<Plan> Plans { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<HealthRecord> HealthRecords { get; set; }  
+        public DbSet<Sessions>Sessions { get; set; }
+        public DbSet<Trainer> Trainers { get; set; }  
+        public DbSet<Member> Members { get; set; }
+
 
     }
 }
