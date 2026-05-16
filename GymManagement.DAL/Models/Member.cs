@@ -10,5 +10,7 @@ namespace GymManagement.DAL.Models
     {
         public string? Photo {  get; set; }
         //joinDate = createdAt
+        public HealthRecord HealthRecord { get; set; }
+        
     }
 }

@@ -13,5 +13,8 @@ public class HealthRecord : BaseEntity
         public string ?Note { get; set; }
         public string BloodType {  get; set; }
         //lastupdated = updatedAt
+
+        public Member HealthRecordMember { get; set; }
+        public int HealthRecordMemberId { get; set; }
     }
 }

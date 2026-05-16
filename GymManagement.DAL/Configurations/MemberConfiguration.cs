@@ -19,6 +19,9 @@ namespace GymManagement.DAL.Configurations
 
 
             base.Configure(builder);
+            builder.HasOne(x => x.HealthRecord)
+                   .WithOne(x => x.HealthRecordMember)
+                   .HasForeignKey<HealthRecord>(x => x.HealthRecordMemberId);
 
         }
 
