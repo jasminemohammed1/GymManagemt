@@ -4,6 +4,7 @@ using GYMProject.DBContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GYMProject.Migrations
 {
     [DbContext(typeof(GymDBContext))]
-    partial class GymDBContextModelSnapshot : ModelSnapshot
+    [Migration("20260516170139_add relationship between member - memberships and memberships and plan")]
+    partial class addrelationshipbetweenmembermembershipsandmembershipsandplan
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,35 +67,6 @@ namespace GYMProject.Migrations
                         {
                             t.HasCheckConstraint("PlanDurationCheck", "DurationDays between 1 and 365");
                         });
-                });
-
-            modelBuilder.Entity("GymManagement.DAL.Models.Booking", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("BookingDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsAttended")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("MemberId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SessionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MemberId");
-
-                    b.HasIndex("SessionId");
-
-                    b.ToTable("Booking");
                 });
 
             modelBuilder.Entity("GymManagement.DAL.Models.Category", b =>
@@ -254,9 +228,6 @@ namespace GYMProject.Migrations
                     b.Property<int>("Capacity")
                         .HasColumnType("int");
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -270,17 +241,10 @@ namespace GYMProject.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("TrainerId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("TrainerId");
 
                     b.ToTable("Sessions", t =>
                         {
@@ -349,25 +313,6 @@ namespace GYMProject.Migrations
                         });
                 });
 
-            modelBuilder.Entity("GymManagement.DAL.Models.Booking", b =>
-                {
-                    b.HasOne("GymManagement.DAL.Models.Member", "Member")
-                        .WithMany("Bookings")
-                        .HasForeignKey("MemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GymManagement.DAL.Models.Sessions", "Session")
-                        .WithMany("Bookings")
-                        .HasForeignKey("SessionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Member");
-
-                    b.Navigation("Session");
-                });
-
             modelBuilder.Entity("GymManagement.DAL.Models.HealthRecord", b =>
                 {
                     b.HasOne("GymManagement.DAL.Models.Member", "HealthRecordMember")
@@ -432,25 +377,6 @@ namespace GYMProject.Migrations
                     b.Navigation("Plan");
                 });
 
-            modelBuilder.Entity("GymManagement.DAL.Models.Sessions", b =>
-                {
-                    b.HasOne("GymManagement.DAL.Models.Category", "Category")
-                        .WithMany("Sessions")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GymManagement.DAL.Models.Trainer", "Trainer")
-                        .WithMany("Sessions")
-                        .HasForeignKey("TrainerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-
-                    b.Navigation("Trainer");
-                });
-
             modelBuilder.Entity("GymManagement.DAL.Models.Trainer", b =>
                 {
                     b.OwnsOne("GymManagement.DAL.Models.Address", "Address", b1 =>
@@ -490,29 +416,12 @@ namespace GYMProject.Migrations
                     b.Navigation("MemberShips");
                 });
 
-            modelBuilder.Entity("GymManagement.DAL.Models.Category", b =>
-                {
-                    b.Navigation("Sessions");
-                });
-
             modelBuilder.Entity("GymManagement.DAL.Models.Member", b =>
                 {
-                    b.Navigation("Bookings");
-
                     b.Navigation("HealthRecord")
                         .IsRequired();
 
                     b.Navigation("MemberShips");
-                });
-
-            modelBuilder.Entity("GymManagement.DAL.Models.Sessions", b =>
-                {
-                    b.Navigation("Bookings");
-                });
-
-            modelBuilder.Entity("GymManagement.DAL.Models.Trainer", b =>
-                {
-                    b.Navigation("Sessions");
                 });
 #pragma warning restore 612, 618
         }

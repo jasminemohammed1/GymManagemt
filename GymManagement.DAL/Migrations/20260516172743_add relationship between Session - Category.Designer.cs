@@ -4,6 +4,7 @@ using GYMProject.DBContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GYMProject.Migrations
 {
     [DbContext(typeof(GymDBContext))]
-    partial class GymDBContextModelSnapshot : ModelSnapshot
+    [Migration("20260516172743_add relationship between Session - Category")]
+    partial class addrelationshipbetweenSessionCategory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -270,17 +273,12 @@ namespace GYMProject.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("TrainerId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("TrainerId");
 
                     b.ToTable("Sessions", t =>
                         {
@@ -440,15 +438,7 @@ namespace GYMProject.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("GymManagement.DAL.Models.Trainer", "Trainer")
-                        .WithMany("Sessions")
-                        .HasForeignKey("TrainerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Category");
-
-                    b.Navigation("Trainer");
                 });
 
             modelBuilder.Entity("GymManagement.DAL.Models.Trainer", b =>
@@ -508,11 +498,6 @@ namespace GYMProject.Migrations
             modelBuilder.Entity("GymManagement.DAL.Models.Sessions", b =>
                 {
                     b.Navigation("Bookings");
-                });
-
-            modelBuilder.Entity("GymManagement.DAL.Models.Trainer", b =>
-                {
-                    b.Navigation("Sessions");
                 });
 #pragma warning restore 612, 618
         }

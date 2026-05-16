@@ -12,5 +12,6 @@ namespace GymManagement.DAL.Models
     {
         //hiredate = CreatedAt
         public Speciality speciality {  get; set; }
+        public ICollection<Sessions> Sessions { get; set; }  = new List<Sessions>();    
     }
 }

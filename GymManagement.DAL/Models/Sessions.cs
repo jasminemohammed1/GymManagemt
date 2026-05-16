@@ -16,5 +16,7 @@ namespace GymManagement.DAL.Models
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
         public Category Category { get; set; } = null!;
         public int CategoryId { get; set; }
+        public Trainer Trainer { get; set; } = default!;
+        public int TrainerId { get;  set; }
     }
 }
