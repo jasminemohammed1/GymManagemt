@@ -3,6 +3,7 @@ using GymManagement.BLL.ViewModels.MemberViewModels;
 using GymManagement.DAL.Models;
 using GymManagement.DAL.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace GymManagement.PL.Controllers
 {
@@ -26,8 +27,18 @@ namespace GymManagement.PL.Controllers
 
         }
 
-        //GET BaseUrl/Members/MemberDetails/{id} 
+        //GET BaseUrl/Members/Details/{id} 
         //MemberDetails - Show one member detail
+
+        public async Task<IActionResult> Details(int Id , CancellationToken ct )
+        {
+            var member = await _memberService.ViewMemberDetailsAsync(Id, ct);
+            if (member != null)
+                return View(member);
+            else
+                return NotFound();
+
+        }
 
 
         // GET BaseUrl/Members/HealthRecordDetails/{id}
@@ -58,6 +69,15 @@ namespace GymManagement.PL.Controllers
                 TempData["ErrorMessage"] = "Failed To Create Member";
                 return RedirectToAction(nameof(Index));
 
+        }
+
+        //GET BaseUrl/Members/HealthRecordDetails/{memberId}
+        // HealthRecordDetails
+
+        public async Task<IActionResult>  HealthRecordDetails(int id , CancellationToken ct )
+        {
+           var healthRecord = await  _memberService.ViewHealthRecordDetailsAsync(id, ct);
+            return View(healthRecord);
         }
 
         #endregion

@@ -13,9 +13,11 @@ namespace GymManagement.BLL.Services.Classes
     public class MemberService : IMemberService
     {
         private readonly IGenericRepository<Member> _memberRepo;
-        public MemberService(IGenericRepository<Member> repo)
+        private readonly IMemberRepository _SpecificMemberRepository;
+        public MemberService(IGenericRepository<Member> repo , IMemberRepository memrepo)
         {
             _memberRepo = repo;
+            _SpecificMemberRepository = memrepo;
             
         }
 
@@ -84,6 +86,45 @@ namespace GymManagement.BLL.Services.Classes
                 return memberViewModel;
             }
             
+        }
+
+        public async Task<HealthRecordViewModel> ViewHealthRecordDetailsAsync(int memberId, CancellationToken ct = default)
+        {
+            var res = await _SpecificMemberRepository.GetMemberHealthRecord(memberId, ct);
+            var healthRecord = new HealthRecordViewModel()
+            {
+                BloodType = res.HealthRecord.BloodType,
+                Height = res.HealthRecord.Height,
+                Weight = res.HealthRecord.Weight,
+                Note = res.HealthRecord.Note,
+            };
+            return healthRecord;
+        }
+
+        public async Task<DetailMemberViewModel ?> ViewMemberDetailsAsync(int memberId, CancellationToken ct = default)
+        {
+            var member = await  _SpecificMemberRepository.GetMemberDetailsAsync(memberId, ct);
+            if(member == null) return null;
+
+            var membership = member?.MemberShips.FirstOrDefault();
+           
+            
+            
+                return new DetailMemberViewModel()
+                {
+                    Name = member.Name,
+                    Phone = member.Phone,
+                    Gender = member.Gender.ToString(),
+                    Email = member.Email,
+                    PlanName = membership?.Plan.Name,
+                    DateOfBirth = member.DateOfBirth,
+                    MemberShipEndDate = membership?.EndDate,
+                    MemberShipStartDate = membership?.CreatedAt,
+                    Address = $"{member?.Address.BuildeingNumber} - {member?.Address.Street} - {member?.Address.City}"
+                };
+            
+           
+          
         }
     }
 }

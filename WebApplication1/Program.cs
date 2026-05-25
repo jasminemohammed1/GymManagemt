@@ -17,6 +17,7 @@ namespace WebApplication1
             builder.Services.AddControllersWithViews();
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped<IMemberService,MemberService>();
+            builder.Services.AddScoped<IMemberRepository,MemberRepository>();
             builder.Services.AddDbContext<GymDBContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
