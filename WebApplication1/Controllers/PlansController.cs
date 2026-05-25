@@ -5,13 +5,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.CompilerServices;
 
+using GYMProject.Models;
+
 
 namespace GYMProject.Controllers
 {
     public class PlansController : Controller
     {
-        private readonly IPlanRepository _planRepo;
-        public PlansController(IPlanRepository plan)
+        private readonly IGenericRepository<Plan> _planRepo;
+        public PlansController(IGenericRepository<Plan> plan)
         {
             _planRepo = plan;
         }
