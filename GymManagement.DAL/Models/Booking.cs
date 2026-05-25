@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace GymManagement.DAL.Models
 {
-    public class Booking
+    public class Booking : BaseEntity
     {
-        //SK
-        public int Id { get; set; }
+       
         public bool IsAttended {  get; set; }
-        public DateTime BookingDate { get; set; }
+
+        //BookingDate = CreatedAt
+      
         public Member Member { get; set; } = null!;
         public int MemberId { get; set; }
         public Sessions Session { get; set; } = null!;

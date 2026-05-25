@@ -14,7 +14,7 @@ public class HealthRecord : BaseEntity
         public string BloodType {  get; set; }
         //lastupdated = updatedAt
 
-        public Member HealthRecordMember { get; set; }
+        public Member HealthRecordMember { get; set; } = default!;
         public int HealthRecordMemberId { get; set; }
     }
 }

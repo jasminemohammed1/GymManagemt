@@ -21,6 +21,11 @@ namespace GymManagement.DAL.Configurations
                     .WithMany(x => x.MemberShips)
                     .HasForeignKey(x => x.PlanId);
 
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.CreatedAt)
+                   .HasColumnName("StartDate")
+                   .HasDefaultValueSql("GETDATE()");
+
 
         }
     }

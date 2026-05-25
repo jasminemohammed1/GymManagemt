@@ -7,15 +7,17 @@ using System.Threading.Tasks;
 
 namespace GymManagement.DAL.Models
 {
-    public class MemberShips
+    public class MemberShips : BaseEntity
     {
-        // SK to allow same member to subscribe same plan that have been registered
-        public int Id { get; set; }
+        
+        
         public Plan Plan { get; set; } = null!;
         public int PlanId { get; set; }
         public Member Member { get; set; } = null!;
         public int MemberId { get; set; }
-        public DateTime StartDate { get; set; }
+       // StartDate = CreatedAt
         public DateTime EndDate { get; set; }
+        public string Status => EndDate > DateTime.Now ? "Active" : "Expired";
+        public bool IsActive => EndDate > DateTime.Now;
     }
 }
