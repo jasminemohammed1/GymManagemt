@@ -26,7 +26,7 @@ namespace GymManagement.BLL.Services.Classes
             //Check Email exist
           var EmailExists = await _memberRepo.AnyAsync(x => x.Email==createMemberViewModel.Email, ct);
             //Check phone exist 
-            var PhoneExists = await _memberRepo.AnyAsync(x => x.Phone ==createMemberViewModel.Phone, ct);
+          var PhoneExists = await _memberRepo.AnyAsync(x => x.Phone ==createMemberViewModel.Phone, ct);
             //Email or phone exist => return false
             if(EmailExists || PhoneExists)
             {
