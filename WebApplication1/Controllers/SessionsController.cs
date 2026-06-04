@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GymManagement.PL.Controllers
 {
-    public class SessionControllers : Controller
+    public class SessionsController : Controller
     {
         private readonly ISessionService _sessionService;
-        public SessionControllers(ISessionService service)
+        public SessionsController(ISessionService service)
         {
             _sessionService = service;
         }
@@ -15,7 +15,7 @@ namespace GymManagement.PL.Controllers
         {
 
             var res = await _sessionService.GetAllSessionAsync(ct);
-            return View();
+            return View(res);
 
         }
     }
