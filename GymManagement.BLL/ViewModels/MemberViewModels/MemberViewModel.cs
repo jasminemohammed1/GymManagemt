@@ -15,5 +15,12 @@ namespace GymManagement.BLL.ViewModels.MemberViewModels
         public string ?Photo { get; set; }
         public string Name { get; set; } = default!;
 
+        // details member 
+        public string ? MemberShipStartDate { get; set; }
+        public string? MemberShipEndDate { get; set; }
+        public string ?PlanName { get; set; }
+        public string? DateOfBirth { get; set; }
+        public string? Addresss { get; set; }
+
     }
 }

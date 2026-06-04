@@ -3,6 +3,8 @@ using GymManagement.BLL.ViewModels.MemberViewModels;
 using GymManagement.DAL.Models;
 using GymManagement.DAL.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using System.Threading.Tasks;
 
 namespace GymManagement.PL.Controllers
@@ -13,36 +15,69 @@ namespace GymManagement.PL.Controllers
 
         public MembersController(IMemberService service)
         {
-           _memberService = service;
+            _memberService = service;
         }
         //GET BaseUrl/Members
         //Index - Show all Members
 
-        public async Task<IActionResult> Index(CancellationToken ct )
+        public async Task<IActionResult> Index(CancellationToken ct)
         {
 
-            var members = await  _memberService.GetAllMembersAsync(ct);
+            var members = await _memberService.GetAllMembersAsync(ct);
             return View(members);
-          
+
 
         }
 
-        //GET BaseUrl/Members/Details/{id} 
+        //GET BaseUrl/Members/MemberDetails/{id} 
         //MemberDetails - Show one member detail
 
-        public async Task<IActionResult> Details(int Id , CancellationToken ct )
+
+        public async  Task<IActionResult> MemberDetails(int id , CancellationToken ct )
         {
-            var member = await _memberService.ViewMemberDetailsAsync(Id, ct);
-            if (member != null)
-                return View(member);
+              //if it is null => index with message 
+              //else => view 
+              var memberDetails = await _memberService.ViewMemberDetailsAsync(id , ct );
+              if(memberDetails is  null )
+            {
+                TempData["ErrorMessage"] = "Member not found";
+                   
+                return RedirectToAction(nameof(Index));
+            }
             else
-                return NotFound();
+            {
+                return View(memberDetails);
+            }
 
         }
+
+
+
+
+
+
+
+        
 
 
         // GET BaseUrl/Members/HealthRecordDetails/{id}
         //HealthRecordDetails - show one member HealthRecord
+
+        public async Task<IActionResult> HealthRecordDetails( int id , CancellationToken ct )
+        {
+            var healthrecord =  await _memberService.ViewMemberHealthRecordAsync(id , ct );
+            // if found => view 
+            if(healthrecord is null )
+            {
+                TempData["ErrorMessage"] = "Member not Found";
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                return View(healthrecord);
+            }
+            // else => go to index with message
+        }
 
         #region CreateMember
         //Get BaseUrl/Members/Create
@@ -57,37 +92,84 @@ namespace GymManagement.PL.Controllers
         //POST BaseUrl/Members/CreateMember {Member}
         //CreateMember - Sumbit the form
 
-        [HttpPost]
-        public async Task<IActionResult> CreateMember(CreateMemberViewModel model , CancellationToken ct)
+        //[HttpPost]
+        public async Task<IActionResult> CreateMember(CreateMemberViewModel model, CancellationToken ct)
         {
             if (!ModelState.IsValid)
-                return View(nameof(Create),model);
-           var res =  await _memberService.CreateMemberAsync(model, ct);
+                return View(nameof(Create), model);
+            var res = await _memberService.CreateMemberAsync(model, ct);
             if (res)
                 TempData["SucessMessage"] = "Member Created Sucessfully";
             else
                 TempData["ErrorMessage"] = "Failed To Create Member";
-                return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index));
 
         }
 
         //GET BaseUrl/Members/HealthRecordDetails/{memberId}
         // HealthRecordDetails
 
-        public async Task<IActionResult>  HealthRecordDetails(int id , CancellationToken ct )
-        {
-           var healthRecord = await  _memberService.ViewHealthRecordDetailsAsync(id, ct);
-            return View(healthRecord);
-        }
+        //public async Task<IActionResult> HealthRecordDetails(int id, CancellationToken ct)
+        //{
+
+        //}
 
         #endregion
 
         #region EditMember
         //Get BaseUrl/Members/Edit/{id}
         //Edit - show Prefilled form
+        [HttpGet]
+       public async Task<IActionResult> EditMember(int id , CancellationToken ct)
+        {
+
+            var member = await  _memberService.GetMemberToUpdateAsync(id , ct);
+            if(member is null)
+            {
+                TempData["ErrorMessage"] = "Member to update not found";
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                return View(member);
+            }
+
+
+        }
 
         //POST BaseUrl/Members/Edit {Member}
         //Edit - Sumbit the form
+
+        [HttpPost]
+        public async  Task<IActionResult> EditMember(int id , MemberToUpdateViewModel model, CancellationToken ct)
+        {
+            // model state valid => service 
+            // model state not valid => form again with same data 
+
+            if(!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            else
+            {
+                var res =  await _memberService.UpdateMemberAsync(id , model, ct);
+                if(res)
+                {
+                    TempData["SucessMessage"] = "Member updated Sucessfully";
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Failed To Update Member";
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+
+        }
+
+
+
+
 
         #endregion
 
@@ -95,8 +177,41 @@ namespace GymManagement.PL.Controllers
         //Get BaseUrl/Members/Delete/{id}
         //Delete - show form
 
-        //POST BaseUrl/Members/DeleteConfirmed {Member}
-        //DeleteConfirmed - Sumbit the form
+        [HttpGet]
+        public async  Task<IActionResult> Delete(int id , CancellationToken ct )
+        {
+            //if member not found => index 
+            //else => view 
+            var member =  await _memberService.ViewMemberDetailsAsync(id , ct);
+            if(member is null)
+            {
+                TempData["ErrorMessage"] = "Member not found";
+                return RedirectToAction(nameof (Index));
+            }
+            else
+            {
+                return View();
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteConfirmed([FromRoute]int id , CancellationToken ct )
+        {
+            var res = await  _memberService.DeleteMemberAsync(id , ct);    
+            if(res)
+
+            {
+                TempData["SucessMessage"] = "Member Delete Sucessfully";
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Failed To Delete Sucessfully";
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+       
 
         #endregion
 
@@ -104,4 +219,5 @@ namespace GymManagement.PL.Controllers
 
 
     }
+
 }
