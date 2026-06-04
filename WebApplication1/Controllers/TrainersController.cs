@@ -103,6 +103,42 @@ namespace GymManagement.PL.Controllers
         }
 
 
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id, CancellationToken ct)
+        {
+           
+            var member = await _trainerService.GetTrainerByIdAsync(id, ct);
+            if (member is null)
+            {
+                TempData["ErrorMessage"] = "Trainer not found";
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                return View();
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteConfirmed([FromRoute] int id, CancellationToken ct)
+        {
+            var res = await _trainerService.DeleteTrainerAsync(id, ct);
+            if (res)
+
+            {
+                TempData["SuccessMessage"] = "Trainer Delete Sucessfully";
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Failed To Delete Sucessfully";
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+
+
+
 
     }
 }
