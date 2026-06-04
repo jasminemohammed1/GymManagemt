@@ -59,25 +59,24 @@ namespace GymManagement.PL.Controllers
         public async Task<IActionResult> Edit(int id, CancellationToken ct)
         {
 
-            var member = await _trainerService.gettr(id, ct);
-            if (member is null)
+            var Trainer = await _trainerService.GetTrainerToUpadteAsync(id, ct);
+            if (Trainer is null)
             {
                 TempData["ErrorMessage"] = "Trainer to update not found";
                 return RedirectToAction(nameof(Index));
             }
             else
             {
-                return View(member);
+                return View(Trainer);
             }
 
 
         }
 
-        //POST BaseUrl/Members/Edit {Member}
-        //Edit - Sumbit the form
+      
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, MemberToUpdateViewModel model, CancellationToken ct)
+        public async Task<IActionResult> Edit(int id, TrainerToUpdateViewModel model, CancellationToken ct)
         {
             // model state valid => service 
             // model state not valid => form again with same data 
@@ -88,15 +87,15 @@ namespace GymManagement.PL.Controllers
             }
             else
             {
-                var res = await _memberService.UpdateMemberAsync(id, model, ct);
+                var res = await _trainerService.UpdateTrainerAsync(id, model, ct);
                 if (res)
                 {
-                    TempData["SucessMessage"] = "Member updated Sucessfully";
+                    TempData["SucessMessage"] = "Trainer updated Sucessfully";
                     return RedirectToAction(nameof(Index));
                 }
                 else
                 {
-                    TempData["ErrorMessage"] = "Failed To Update Member";
+                    TempData["ErrorMessage"] = "Failed To Update Trainer";
                     return RedirectToAction(nameof(Index));
                 }
             }
