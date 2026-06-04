@@ -18,6 +18,8 @@ namespace WebApplication1
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped<IMemberService,MemberService>();
             builder.Services.AddScoped<IPlanService, PlanService>();
+            //builder.Services.AddScoped<ITrainerService, TrainerService>();
+
 
             builder.Services.AddScoped<IMemberRepository,MemberRepository>();
             builder.Services.AddDbContext<GymDBContext>(options =>
