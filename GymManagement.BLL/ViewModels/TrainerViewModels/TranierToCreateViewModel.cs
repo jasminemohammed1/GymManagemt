@@ -27,7 +27,7 @@ namespace GymManagement.BLL.ViewModels.TrainerViewModels
         public string Phone {  get; set; } = default!;
         [Required(ErrorMessage = "Date of Birth is required")]
         [DataType(DataType.Date)]
-        public DateTime DateOfBirth { get; set; }
+        public DateOnly DateOfBirth { get; set; }
         [Required(ErrorMessage = "Speciality is required")]
         public Speciality Speciality { get; set; }
         [Required(ErrorMessage = "Gender is required")]
