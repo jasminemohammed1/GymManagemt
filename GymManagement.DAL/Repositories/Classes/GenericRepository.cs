@@ -23,7 +23,7 @@ namespace GymManagement.DAL.Repositories.Classes
             _set = _dbContext.Set<TEntity>();
             
         }
-        public void Add (TEntity entity, CancellationToken ct)
+        public void Add (TEntity entity)
         {
            _set.Add(entity);
            
@@ -34,7 +34,7 @@ namespace GymManagement.DAL.Repositories.Classes
             return await  _set.AsNoTracking().AnyAsync(predicate, ct);
         }
 
-        public void Delete(TEntity entity, CancellationToken ct)
+        public void Delete(TEntity entity)
         {
             _set.Remove(entity);
         }
@@ -57,7 +57,7 @@ namespace GymManagement.DAL.Repositories.Classes
 
         }
 
-        public void  Update(TEntity entity, CancellationToken ct)
+        public void  Update(TEntity entity)
         {
             _set.Update(entity);
           

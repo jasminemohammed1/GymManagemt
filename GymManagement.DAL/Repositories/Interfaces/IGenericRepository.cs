@@ -14,9 +14,9 @@ namespace GymManagement.DAL.Repositories.Interfaces
 
         public Task<IEnumerable<TEntity>> GetAllAsync(bool tracking = false, CancellationToken ct = default);
         public Task<TEntity?> GetByIdAsync(int id, CancellationToken ct = default);
-        public  void Update(TEntity entity, CancellationToken ct);
-        public void  Add(TEntity entity, CancellationToken ct);
-        public void  Delete(TEntity entity, CancellationToken ct);
+        public  void Update(TEntity entity);
+        public void  Add(TEntity entity);
+        public void  Delete(TEntity entity);
         public Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken ct);
         public Task<TEntity ?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, bool tracking = false, CancellationToken ct = default);
 
