@@ -1,6 +1,6 @@
 ﻿@using GYMProject.Models
 
-@model IEnumerable<Plan>
+@model IEnumerable<PlanViewModel>
 @{
     Layout = "_Layout";
 }
@@ -55,7 +55,7 @@
                             <div class="mb-3">
                                 <p class="text-muted mb-2">
                                     <i class="bi bi-calendar-check text-primary-color me-2"></i>
-                                    <strong>Duration:</strong> @plan.DurationDays Days
+                                    <strong>Duration:</strong> @plan.Duration Days
                                 </p>
                                 <p class="text-muted mb-3">
                                     <i class="bi bi-file-text text-primary-color me-2"></i>
@@ -73,7 +73,7 @@
                                         <a asp-action="Edit" asp-route-id="@plan.Id" class="btn btn-outline btn-sm flex-fill">
                                             <i class="bi bi-pencil me-1"></i>Edit
                                         </a>
-                                        <form method="post" class="flex-fill">
+                                        <form asp-action="Activate"  asp-controller="Plans" asp-route-id="@plan.Id" method="post" class="flex-fill">
 
                                             <!-- If Plan Active -->
 
