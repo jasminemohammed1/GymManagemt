@@ -1,11 +1,7 @@
-﻿using GymManagement.DAL.Models;
+﻿using GymManagement.BLL.Services.interfaces;
+using GymManagement.DAL.Models;
 using GymManagement.DAL.Repositories.Interfaces;
 using GYMProject.DBContexts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GymManagement.DAL.Repositories.Classes
 {
@@ -13,14 +9,19 @@ namespace GymManagement.DAL.Repositories.Classes
     {
         private readonly GymDBContext _dbcontext;
         private readonly Dictionary<string, object> repositories = [];
-        public UnitOfWork(GymDBContext db)
+
+        public UnitOfWork(GymDBContext db, ISessionRepository repo)
         {
             _dbcontext = db;
+            SessionRepository = repo;
         }
+
+        public ISessionRepository SessionRepository { get; }  // ✅ matches interface
+
         public IGenericRepository<TEntity> GetRepository<TEntity>() where TEntity : BaseEntity, new()
         {
             var type = typeof(TEntity).Name;
-            if(repositories.TryGetValue(type, out object ? repository))
+            if (repositories.TryGetValue(type, out object? repository))
             {
                 return (IGenericRepository<TEntity>)repository;
             }
@@ -30,12 +31,11 @@ namespace GymManagement.DAL.Repositories.Classes
                 repositories[type] = repo;
                 return repo;
             }
-
         }
 
         public async Task<int> SaveChangesAsync(CancellationToken ct = default)
         {
-          return await _dbcontext.SaveChangesAsync( ct );
+            return await _dbcontext.SaveChangesAsync(ct);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using GymManagement.DAL.Models;
+﻿using GymManagement.BLL.Services.interfaces;
+using GymManagement.DAL.Models;
 using GYMProject.Models;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using System;
@@ -13,5 +14,6 @@ namespace GymManagement.DAL.Repositories.Interfaces
     {
         public IGenericRepository<TEntity> GetRepository<TEntity>() where TEntity : BaseEntity , new ();
         public Task<int> SaveChangesAsync(CancellationToken ct = default);
+        public ISessionRepository SessionRepository { get; }
     }
 }
