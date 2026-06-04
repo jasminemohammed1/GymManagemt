@@ -97,7 +97,8 @@ namespace GymManagement.BLL.Services.Classes
                  Phone = trainer.Phone,
                  Speciality = trainer.speciality.ToString(),
                  Address = $"{trainer.Address.BuildeingNumber} - {trainer.Address.Street} - {trainer.Address.City}",
-                 DateOfBirth = trainer.DateOfBirth.ToShortDateString()
+                 DateOfBirth = trainer.DateOfBirth.ToShortDateString(),
+                 Email = trainer.Email,
             };
             return model;
         }

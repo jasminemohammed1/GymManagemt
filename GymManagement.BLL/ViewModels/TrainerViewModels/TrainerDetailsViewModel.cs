@@ -14,5 +14,6 @@ namespace GymManagement.BLL.ViewModels.TrainerViewModels
         public string Address { get; set; } = default!;
         public string Phone { get; set; } = default!;
         public string DateOfBirth { get; set; } = default!;
+        public string Email { get; set; } = default!;
     }
 }

@@ -90,7 +90,7 @@ namespace GymManagement.PL.Controllers
                 var res = await _trainerService.UpdateTrainerAsync(id, model, ct);
                 if (res)
                 {
-                    TempData["SucessMessage"] = "Trainer updated Sucessfully";
+                    TempData["SuccessMessage"] = "Trainer updated Sucessfully";
                     return RedirectToAction(nameof(Index));
                 }
                 else
