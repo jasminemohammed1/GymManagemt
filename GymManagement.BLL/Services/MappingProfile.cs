@@ -1,0 +1,52 @@
+﻿using AutoMapper;
+using GymManagement.BLL.ViewModels.MemberViewModels;
+using GymManagement.DAL.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace GymManagement.BLL.Services
+{
+    public class MappingProfile : Profile
+    {
+        public MappingProfile()
+        {
+            CreateMap<Member, MemberViewModel>()
+                .ForMember(des => des.Gender, opts => opts.MapFrom(src => src.Gender))
+                .ForMember(des => des.Addresss, opts => opts.MapFrom(src => $"{src.Address.BuildeingNumber} - {src.Address.Street} - {src.Address.City}"))
+                .ForMember(des => des.DateOfBirth, opts => opts.MapFrom(src => src.DateOfBirth));
+            CreateMap<HealthRecord, HealthRecordViewModel>().ReverseMap();
+            CreateMap<Member, MemberToUpdateViewModel>()
+                   .ForMember(des => des.Street, opts => opts.MapFrom(src => src.Address.Street))
+                   .ForMember(des => des.BuildingNumber, opts => opts.MapFrom(src => src.Address.BuildeingNumber))
+                   .ForMember(des => des.Street, opts => opts.MapFrom(src => src.Address.Street));
+
+            CreateMap<MemberToUpdateViewModel, Member>()
+                    .ForMember(des => des.Name, opts => opts.Ignore())
+                    .ForMember(des => des.Photo, opts => opts.Ignore())
+                    //.ForMember(des => des.Address, opts => opts.MapFrom(src => src ))
+                    .AfterMap((src, des) =>
+                    {
+                         des.Address.Street = src.Street ;
+                         des.Address.BuildeingNumber = src.BuildingNumber ;
+                         des.Address.City = src.City ;
+                    });
+
+            CreateMap<CreateMemberViewModel, Member>()
+                 .ForMember(des => des.Address, opts => opts.MapFrom(src => new Address()
+                 {
+                     Street = src.Street,
+                     City = src.City,
+                     BuildeingNumber = src.BuildingNumber
+                 })).ForMember(des => des.HealthRecord, opts => opts.MapFrom(src => src.HealthRecordViewModel));
+                
+            
+                    
+
+                    
+                 
+        }
+    }
+}

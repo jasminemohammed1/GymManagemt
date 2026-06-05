@@ -16,7 +16,7 @@ namespace GymManagement.DAL.Repositories.Classes
             SessionRepository = repo;
         }
 
-        public ISessionRepository SessionRepository { get; }  // ✅ matches interface
+        public ISessionRepository SessionRepository { get; }  
 
         public IGenericRepository<TEntity> GetRepository<TEntity>() where TEntity : BaseEntity, new()
         {

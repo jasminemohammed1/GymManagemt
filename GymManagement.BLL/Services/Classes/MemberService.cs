@@ -1,4 +1,5 @@
-﻿using GymManagement.BLL.Services.interfaces;
+﻿using AutoMapper;
+using GymManagement.BLL.Services.interfaces;
 using GymManagement.BLL.ViewModels.MemberViewModels;
 using GymManagement.DAL.Models;
 using GymManagement.DAL.Repositories.Interfaces;
@@ -16,14 +17,14 @@ namespace GymManagement.BLL.Services.Classes
     {
 
         private readonly IUnitOfWork _unitofwork;
+        private readonly IMapper _mapper;
 
-        public MemberService(IUnitOfWork unitOfWork) 
+        public MemberService(IUnitOfWork unitOfWork , IMapper mapper) 
             
         {
             
             _unitofwork = unitOfWork;
-           
-
+            this._mapper = mapper;
         }
 
         public async Task<bool> CreateMemberAsync(CreateMemberViewModel createMemberViewModel, CancellationToken ct)
@@ -41,30 +42,7 @@ namespace GymManagement.BLL.Services.Classes
             }
             // else create member
 
-            Member member = new Member()
-            {
-                Name = createMemberViewModel.Name,
-                Email = createMemberViewModel.Email,
-                Phone = createMemberViewModel.Phone,
-                DateOfBirth = createMemberViewModel.DateOfBirth,
-                Address = new Address()
-                {
-                    BuildeingNumber = createMemberViewModel.BuildingNumber,
-                    City = createMemberViewModel.City,
-                    Street = createMemberViewModel.Street,
-                },
-                Gender = createMemberViewModel.Gender,
-
-                HealthRecord = new HealthRecord()
-                {
-                    Weight = createMemberViewModel.HealthRecordViewModel.Weight,
-                    Note = createMemberViewModel.HealthRecordViewModel.Note,
-                    Height = createMemberViewModel.HealthRecordViewModel.Height,
-                    BloodType = createMemberViewModel.HealthRecordViewModel.BloodType
-                },
-
-
-            };
+            var member = _mapper.Map<Member>(createMemberViewModel);
 
            _unitofwork.GetRepository<Member>().Add(member);
            var res = await  _unitofwork.SaveChangesAsync();
@@ -93,16 +71,7 @@ namespace GymManagement.BLL.Services.Classes
             if (!members.Any()) return [];
             else
             {
-                var memberViewModel = members.Select(m => new MemberViewModel()
-                {
-                    Email = m.Email,
-                    Id = m.Id,
-                    Gender = m.Gender.ToString(),
-                    Phone = m.Phone,
-                    Name = m.Name,
-
-
-                });
+                var memberViewModel = _mapper.Map<IEnumerable<Member>,IEnumerable<MemberViewModel>>(members);
 
                 return memberViewModel;
             }
@@ -115,17 +84,7 @@ namespace GymManagement.BLL.Services.Classes
         {
             var member = await _unitofwork.GetRepository<Member>().GetByIdAsync(memberId, ct);
             if (member == null) return null;
-            var model = new MemberToUpdateViewModel()
-            {
-                BuildingNumber = member.Address.BuildeingNumber,
-                City = member.Address.City,
-                Email = member.Email,
-                Name = member.Name,
-                Phone = member.Phone,
-                Photo = member.Photo,
-                Street = member.Address.Street
-
-            };
+            var model = _mapper.Map<Member, MemberToUpdateViewModel>(member);
             return model;
         }
 
@@ -136,12 +95,7 @@ namespace GymManagement.BLL.Services.Classes
             var EmailExists = await _unitofwork.GetRepository<Member>().AnyAsync(x => x.Email == updateMemberViewModel.Email && x.Id != memberId, ct);
             var PhoneExists = await _unitofwork.GetRepository<Member>().AnyAsync(x => x.Phone == updateMemberViewModel.Phone && x.Id != memberId, ct);
             if (EmailExists || PhoneExists) return false;
-            member.Email = updateMemberViewModel.Email;
-            member.Phone = updateMemberViewModel.Phone;
-            member.Phone = updateMemberViewModel.Phone;
-            member.Address.BuildeingNumber = updateMemberViewModel.BuildingNumber;
-            member.Address.Street = updateMemberViewModel.Street;
-            member.Address.City = updateMemberViewModel.City;
+            _mapper.Map(updateMemberViewModel, member);
             member.UpdatedAt = DateTime.Now;
 
            _unitofwork.GetRepository<Member>().Update(member);
@@ -154,18 +108,9 @@ namespace GymManagement.BLL.Services.Classes
         {
             var member = await  _unitofwork.GetRepository<Member>().GetByIdAsync(memberId, ct);
             if (member == null) return null;
-            var model = new MemberViewModel()
-            {
-                Name = member.Name,
-                Photo = member.Photo,
-                Gender = member.Gender.ToString(),
-                Addresss = $"{member.Address.BuildeingNumber} - {member.Address.Street} - {member.Address.City}",
-                Phone = member.Phone,
-                Email = member.Email,
-                DateOfBirth = member.DateOfBirth.ToShortDateString()
 
-
-            };
+            
+            var model = _mapper.Map<Member, MemberViewModel>(member);
             var membership = await _unitofwork.GetRepository<MemberShips>().FirstOrDefaultAsync(x => x.MemberId == memberId && x.EndDate > DateTime.Now);
             if(membership is not null)
             {
@@ -187,13 +132,7 @@ namespace GymManagement.BLL.Services.Classes
         {
             var healthrecord = await _unitofwork.GetRepository<HealthRecord>().FirstOrDefaultAsync(x => x.HealthRecordMemberId == memberId);
             if (healthrecord == null) return null;
-            var model = new HealthRecordViewModel()
-            {
-               BloodType = healthrecord.BloodType,
-               Height = healthrecord.Height,
-               Note = healthrecord.Note,
-               Weight = healthrecord.Weight,    
-            };
+            var model = _mapper.Map<HealthRecord, HealthRecordViewModel>(healthrecord);
             return model;
         }
     }
