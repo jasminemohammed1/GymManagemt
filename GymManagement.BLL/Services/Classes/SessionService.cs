@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using GymManagement.BLL.Common;
 using GymManagement.BLL.Services.interfaces;
 using GymManagement.BLL.ViewModels.SessionViewModels;
 using GymManagement.DAL.Models;
@@ -24,22 +25,22 @@ namespace GymManagement.BLL.Services.Classes
             this._mapper = mapper;
         }
 
-        public async  Task<bool> CreateSessionAsync(CreateSessionViewModel model, CancellationToken ct = default)
+        public async  Task<Result> CreateSessionAsync(CreateSessionViewModel model, CancellationToken ct = default)
         {
-            if (model.StartDate >= model.EndDate) return false;
-            if (model.StartDate < DateTime.Now) return false;
-            if (model.Capacity < 1 || model.Capacity > 25) return false;
+            if (model.StartDate >= model.EndDate) return Result.Validation("StartDate must be < EndDate");
+            if (model.StartDate < DateTime.Now) return Result.Validation("StartDate must be in the Future");
+            if (model.Capacity < 1 || model.Capacity > 25) return Result.Validation("Capacity must be between 1 & 25");
 
             var trainer =  await _unitOfWork.GetRepository<Trainer>().GetByIdAsync(model.TrainerId);
-            if(trainer == null) return false;
+            if (trainer == null) return Result.NotFound("Trainer not Found");
             var category =  await _unitOfWork.GetRepository<Category>().GetByIdAsync(model.CategoryId);
-            if (category == null) return false;
+            if (category == null) return Result.NotFound("Category Not Found");
             var IsValid = Enum.TryParse<Speciality>(category.CategoryName, true, out Speciality CategorySpeciality);
-            if (!IsValid || trainer.speciality != CategorySpeciality) return false;
+            if (!IsValid || trainer.speciality != CategorySpeciality) return Result.Validation("Category Must Match Trainer Speciality");
             var session = _mapper.Map<CreateSessionViewModel, Sessions>(model);
             _unitOfWork.GetRepository<Sessions>().Add(session);
             var res = await  _unitOfWork.SaveChangesAsync(ct);
-            return res > 0;
+            return res > 0 ? Result.Ok() : Result.Fail("Cannot Create This Session");
 
            
 
