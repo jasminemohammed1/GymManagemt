@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using GymManagement.BLL.ViewModels.MemberViewModels;
 using GymManagement.BLL.ViewModels.PlansViewModel;
+using GymManagement.BLL.ViewModels.SessionViewModels;
 using GymManagement.BLL.ViewModels.TrainerViewModels;
 using GymManagement.DAL.Models;
 using GYMProject.Models;
@@ -20,6 +21,7 @@ namespace GymManagement.BLL.Services
             CreateMemberProfiles();
             CreateTrainerProfiles();
             CreatePlanProfiles();
+            CreateSessionProfile();
            
 
 
@@ -107,6 +109,10 @@ namespace GymManagement.BLL.Services
                 .ForMember(des => des.Name, opts => opts.Ignore());
                
                 
+        }
+        private void CreateSessionProfile()
+        {
+            CreateMap<CreateSessionViewModel, Sessions>();
         }
     }
 }
