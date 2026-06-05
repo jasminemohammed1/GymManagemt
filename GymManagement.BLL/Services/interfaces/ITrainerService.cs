@@ -1,4 +1,5 @@
-﻿using GymManagement.BLL.ViewModels.TrainerViewModels;
+﻿using GymManagement.BLL.Common;
+using GymManagement.BLL.ViewModels.TrainerViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +10,12 @@ namespace GymManagement.BLL.Services.interfaces
 {
     public interface ITrainerService
     {
-        public Task<IEnumerable<TrainerViewModel>> GetAllTrainersAsync(CancellationToken ct = default);
-        public Task<bool> CreateTrainerAsync(TranierToCreateViewModel model,CancellationToken ct = default);
-        public Task<TrainerDetailsViewModel ?> GetTrainerByIdAsync(int trainerid , CancellationToken ct = default);
-        public Task<TrainerToUpdateViewModel?> GetTrainerToUpadteAsync(int trainerid, CancellationToken ct = default);
-        public Task<bool> UpdateTrainerAsync(int trainerid, TrainerToUpdateViewModel model, CancellationToken ct = default);
-        public Task<bool> DeleteTrainerAsync(int TrainerId, CancellationToken ct = default);
+        public Task<Result<IEnumerable<TrainerViewModel>>> GetAllTrainersAsync(CancellationToken ct = default);
+        public Task<Result> CreateTrainerAsync(TranierToCreateViewModel model,CancellationToken ct = default);
+        public Task<Result<TrainerDetailsViewModel ?>> GetTrainerByIdAsync(int trainerid , CancellationToken ct = default);
+        public Task<Result<TrainerToUpdateViewModel?>> GetTrainerToUpadteAsync(int trainerid, CancellationToken ct = default);
+        public Task<Result> UpdateTrainerAsync(int trainerid, TrainerToUpdateViewModel model, CancellationToken ct = default);
+        public Task<Result> DeleteTrainerAsync(int TrainerId, CancellationToken ct = default);
 
     }
 }

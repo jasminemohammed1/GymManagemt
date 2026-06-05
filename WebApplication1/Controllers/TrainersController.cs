@@ -17,7 +17,7 @@ namespace GymManagement.PL.Controllers
         public async Task<IActionResult> Index(CancellationToken ct )
         {
             var trainers = await _trainerService.GetAllTrainersAsync(ct);
-            return View(trainers);
+            return View(trainers.value);
         }
 
         public async Task<IActionResult> Details(int id , CancellationToken ct )
@@ -30,7 +30,7 @@ namespace GymManagement.PL.Controllers
             }
             else
             {
-                return View(trainer);
+                return View(trainer.value);
             }
         }
         [HttpGet]
@@ -48,10 +48,10 @@ namespace GymManagement.PL.Controllers
             else
             {
                 var res = await _trainerService.CreateTrainerAsync(model , ct );
-                if (res)
+                if (res.Success)
                     TempData["SuccessMessage"] = "Trainer Created SucessFully";
                 else
-                    TempData["ErrorMessage"] = "Faild To Create Trainer";
+                    TempData["ErrorMessage"] = res.ErrorMessage;
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -67,7 +67,7 @@ namespace GymManagement.PL.Controllers
             }
             else
             {
-                return View(Trainer);
+                return View(Trainer.value);
             }
 
 
@@ -88,14 +88,14 @@ namespace GymManagement.PL.Controllers
             else
             {
                 var res = await _trainerService.UpdateTrainerAsync(id, model, ct);
-                if (res)
+                if (res.Success)
                 {
                     TempData["SuccessMessage"] = "Trainer updated Sucessfully";
                     return RedirectToAction(nameof(Index));
                 }
                 else
                 {
-                    TempData["ErrorMessage"] = "Failed To Update Trainer";
+                    TempData["ErrorMessage"] = res.ErrorMessage;
                     return RedirectToAction(nameof(Index));
                 }
             }
@@ -123,7 +123,7 @@ namespace GymManagement.PL.Controllers
         public async Task<IActionResult> DeleteConfirmed([FromRoute] int id, CancellationToken ct)
         {
             var res = await _trainerService.DeleteTrainerAsync(id, ct);
-            if (res)
+            if (res.Success)
 
             {
                 TempData["SuccessMessage"] = "Trainer Delete Sucessfully";
@@ -131,7 +131,7 @@ namespace GymManagement.PL.Controllers
             }
             else
             {
-                TempData["ErrorMessage"] = "Failed To Delete Sucessfully";
+                TempData["ErrorMessage"] = res.ErrorMessage;
                 return RedirectToAction(nameof(Index));
             }
         }
