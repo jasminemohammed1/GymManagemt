@@ -24,7 +24,7 @@ namespace GYMProject.Controllers
         {
             var plans = await _planService.GetAllPlansAsync(ct);
            
-            return View(plans);
+            return View(plans.value);
         }
         [HttpGet]
         public async Task<IActionResult> Details (int id , CancellationToken ct)
@@ -37,7 +37,7 @@ namespace GYMProject.Controllers
             }
 
             else
-                return View(plan);
+                return View(plan.value);
             
 
 
@@ -52,7 +52,7 @@ namespace GYMProject.Controllers
                 TempData["ErrorMessage"] = "Plan not Found or cannot be edited";
                 return RedirectToAction(nameof(Index));
             }
-            return View(plan);
+            return View(plan.value);
 
         }
         [HttpPost]
@@ -66,7 +66,7 @@ namespace GYMProject.Controllers
             else
             {
                 var res = await  _planService.UpdatePlanAsync(id , model , ct);    
-                if(res)
+                if(res.Success)
                 {
                     TempData["SuccessMessage"] = "Update Plan Sucessfully";
 
@@ -74,7 +74,7 @@ namespace GYMProject.Controllers
                 }
                 else
                 {
-                    TempData["ErrorMessage"] = "Failed To Update";
+                    TempData["ErrorMessage"] = res.ErrorMessage;
                     return RedirectToAction(nameof(Index));
                 }
             }
@@ -83,10 +83,10 @@ namespace GYMProject.Controllers
         public async Task<IActionResult> Activate(int id , CancellationToken ct)
         {
             var res = await _planService.TogglePlan(id, ct);
-            if (res)
+            if (res.Success)
                 TempData["SuccessMessage"] = "Plan Status Changes Sucessfully";
             else
-                TempData["ErrorMessage"] = "Faild To update the Status of plan";
+                TempData["ErrorMessage"] = res.ErrorMessage;
             return RedirectToAction(nameof(Index));
 
         }
