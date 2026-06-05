@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using GymManagement.BLL.ViewModels.MemberViewModels;
+using GymManagement.BLL.ViewModels.PlansViewModel;
 using GymManagement.BLL.ViewModels.TrainerViewModels;
 using GymManagement.DAL.Models;
+using GYMProject.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +19,7 @@ namespace GymManagement.BLL.Services
 
             CreateMemberProfiles();
             CreateTrainerProfiles();
+            CreatePlanProfiles();
            
 
 
@@ -93,6 +96,17 @@ namespace GymManagement.BLL.Services
                     des.Address.BuildeingNumber = src.BuildingNumber;
                 })
                 .ForMember(dest => dest.Name , opts => opts.Ignore());
+        }
+        private void CreatePlanProfiles()
+        {
+            CreateMap<Plan, PlanViewModel>()
+                .ForMember(des => des.Duration, opts => opts.MapFrom(src => src.DurationDays ));
+            CreateMap<Plan, PlanToUpdateViewModel>();
+
+            CreateMap<PlanToUpdateViewModel, Plan>()
+                .ForMember(des => des.Name, opts => opts.Ignore());
+               
+                
         }
     }
 }
