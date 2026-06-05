@@ -113,6 +113,8 @@ namespace GymManagement.BLL.Services
         private void CreateSessionProfile()
         {
             CreateMap<CreateSessionViewModel, Sessions>();
+            CreateMap<Category, CetegorySelectViewModel>();
+            CreateMap<Trainer, TrainerSelectViewModel>();
         }
     }
 }

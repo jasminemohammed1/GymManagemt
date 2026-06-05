@@ -53,6 +53,9 @@ namespace GymManagement.BLL.Services.Classes
 
         public async Task<IEnumerable<CetegorySelectViewModel>> GetAllCategoryForDropDownAsync(CancellationToken cancellationToken = default)
         {
+            var categories =  await _unitOfWork.GetRepository<Category>().GetAllAsync(ct : ct);
+            var models = _mapper.Map<IEnumerable<Category>, IEnumerable<CetegorySelectViewModel>>(categories);
+            return categories;
           
         }
 
