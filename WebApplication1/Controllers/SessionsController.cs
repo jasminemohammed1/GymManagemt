@@ -2,6 +2,7 @@
 using GymManagement.BLL.ViewModels.SessionViewModels;
 using Microsoft.AspNetCore.Http.Metadata;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace GymManagement.PL.Controllers
 {
@@ -13,7 +14,7 @@ namespace GymManagement.PL.Controllers
             _sessionService = service;
         }
 
-        public async Task<IActionResult> Index(CancellationToken ct )
+        public async Task<IActionResult> Index(CancellationToken ct)
         {
 
             var res = await _sessionService.GetAllSessionAsync(ct);
@@ -23,20 +24,23 @@ namespace GymManagement.PL.Controllers
 
         #region CreateSession
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create(CancellationToken ct)
         {
+            await PopulateDropDownList(ct);
             return View();
         }
 
         [HttpPost]
-        public async Task< IActionResult> Create(CreateSessionViewModel model , CancellationToken ct )
+        public async Task<IActionResult> Create(CreateSessionViewModel model, CancellationToken ct)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
+                await PopulateDropDownList(ct);
+
                 return View(model);
             }
             var res = await _sessionService.CreateSessionAsync(model, ct);
-            if(res)
+            if (res)
             {
                 TempData["SuccessMessage"] = "Session Created Sucessfully";
                 return RedirectToAction(nameof(Index));
@@ -44,10 +48,19 @@ namespace GymManagement.PL.Controllers
             else
             {
                 TempData["ErrorMessage"] = "Faild To Create Session";
+                await PopulateDropDownList(ct);
                 return View(model);
 
             }
         }
         #endregion
+
+
+        private async Task PopulateDropDownList(CancellationToken ct)
+        {
+            ViewBag.Trainers = new SelectList(await _sessionService.GetAllTrainersForDropDownAsync(ct), "Id", "Name");
+            ViewBag.Categories = new SelectList(await _sessionService.GetAllCategoryForDropDownAsync(ct), "Id", "CategoryName");
+        }
+
     }
 }

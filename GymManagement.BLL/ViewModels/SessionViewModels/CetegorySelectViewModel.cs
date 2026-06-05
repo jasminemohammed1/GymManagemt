@@ -8,7 +8,7 @@ namespace GymManagement.BLL.ViewModels.SessionViewModels
 {
     public class CetegorySelectViewModel
     {
-        int Id { get; set; }
-        public string CategoryName { get; set; }
+        public int Id { get; set; }
+        public string CategoryName { get; set; } = default!;
     }
 }

@@ -27,6 +27,7 @@ namespace GYMProject.DBContexts
         public DbSet<Sessions>Sessions { get; set; }
         public DbSet<Trainer> Trainers { get; set; }  
         public DbSet<Member> Members { get; set; }
+        public DbSet<Booking> Booking { get; set; }
 
 
     }

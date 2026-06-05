@@ -29,7 +29,7 @@ namespace GymManagement.BLL.Services.Classes
 
         public async Task<int> GetBookedSlotsAsync(int Id, CancellationToken ct)
         {
-            return await _db.Set<Booking>().CountAsync(x => x.Id == Id);
+            return await _db.Booking.CountAsync(x => x.SessionId== Id);
         }
     }
 }

@@ -17,7 +17,7 @@ namespace GymManagement.BLL.ViewModels.SessionViewModels
         public int TrainerId { get; set; }
 
         [Required(ErrorMessage = "Description field is required")]
-        [StringLength(500, MinimumLength =10 , ErrorMessage = "Description length must be between 100 - 500")]
+        [StringLength(500, MinimumLength =10 , ErrorMessage = "Description length must be between 10 - 500")]
         public string Description { get; set; } = default!;
         [Required(ErrorMessage = "Capacity field is required")]
         [Range(1,25,ErrorMessage ="Capacity must be between 1 - 25")]
