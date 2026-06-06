@@ -76,6 +76,8 @@ namespace GymManagement.BLL.Services.Classes
             return Result<TrainerDetailsViewModel>.Ok(model);
         }
 
+     
+
         public async Task<Result<TrainerToUpdateViewModel>?> GetTrainerToUpadteAsync(int trainerid, CancellationToken ct = default)
         {
            var trainer = await _unitOfWork.GetRepository<Trainer>().GetByIdAsync(trainerid , ct );

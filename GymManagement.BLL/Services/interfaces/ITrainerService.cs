@@ -16,6 +16,7 @@ namespace GymManagement.BLL.Services.interfaces
         public Task<Result<TrainerToUpdateViewModel?>> GetTrainerToUpadteAsync(int trainerid, CancellationToken ct = default);
         public Task<Result> UpdateTrainerAsync(int trainerid, TrainerToUpdateViewModel model, CancellationToken ct = default);
         public Task<Result> DeleteTrainerAsync(int TrainerId, CancellationToken ct = default);
+      
 
     }
 }

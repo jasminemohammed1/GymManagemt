@@ -4,6 +4,7 @@ using GymManagement.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,7 +20,7 @@ namespace GymManagement.BLL.Services.interfaces
         public Task<Result<MemberToUpdateViewModel?>> GetMemberToUpdateAsync(int memberId, CancellationToken ct = default);
         public Task<Result> UpdateMemberAsync(int memberId , MemberToUpdateViewModel updateMemberViewModel , CancellationToken ct = default);
         public Task<Result> DeleteMemberAsync(int memberId, CancellationToken ct = default);
-        
+       
 
         
     }

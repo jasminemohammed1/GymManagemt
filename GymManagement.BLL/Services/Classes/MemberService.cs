@@ -66,6 +66,8 @@ namespace GymManagement.BLL.Services.Classes
 
         }
 
+      
+
         public async Task<Result<IEnumerable<MemberViewModel>>> GetAllMembersAsync(CancellationToken ct = default)
         {
             var members = await _unitofwork.GetRepository<Member>().GetAllAsync(ct: ct);
@@ -88,6 +90,8 @@ namespace GymManagement.BLL.Services.Classes
             var model = _mapper.Map<Member, MemberToUpdateViewModel>(member);
             return Result<MemberToUpdateViewModel>.Ok(model);
         }
+
+       
 
         public async Task<Result> UpdateMemberAsync(int memberId, MemberToUpdateViewModel updateMemberViewModel, CancellationToken ct = default)
         {

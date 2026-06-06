@@ -109,6 +109,10 @@ namespace GymManagement.BLL.Services.Classes
 
         }
 
+        
+
+        
+
         public async Task<Result<SessionViewModel>> GetSessionByIdAsync(int sessionId, CancellationToken ct = default)
         {
            var session = await  _unitOfWork.SessionRepository.GetSessionByIdWithTrainerAndCategory(sessionId, ct );

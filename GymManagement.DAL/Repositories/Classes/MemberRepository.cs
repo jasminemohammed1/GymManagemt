@@ -17,6 +17,16 @@ namespace GymManagement.DAL.Repositories.Classes
         {
             gymDBContext = db;
         }
+
+        public async Task<int> GetMemberCount(CancellationToken ct)
+        {
+            return  await gymDBContext.Members.CountAsync(ct);
+        }
+
+        public async Task<int> GetMemberCountWithActiveMemberShips(CancellationToken ct)
+        {
+            return await gymDBContext.Members.Include(x => x.MemberShips.Where(x => x.IsActive)).CountAsync(ct);
+        }
         public async Task<Member?> GetMemberDetailsAsync(int memberId, CancellationToken ct)
         {
             var memberDetail = await gymDBContext.Members.Include(x => x.MemberShips).ThenInclude(x => x.Plan)
@@ -33,5 +43,6 @@ namespace GymManagement.DAL.Repositories.Classes
 
 
         }
+
     }
 }

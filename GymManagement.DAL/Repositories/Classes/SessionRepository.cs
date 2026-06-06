@@ -32,10 +32,28 @@ namespace GymManagement.BLL.Services.Classes
             return await _db.Booking.CountAsync(x => x.SessionId== Id);
         }
 
+        public async Task<int> GetCompletedSessionsCount(CancellationToken ct)
+        {
+            var res = await  _db.Sessions.CountAsync(x => x.StartDate < DateTime.Now && x.EndDate < DateTime.Now) ;
+            return res;
+        }
+
+        public async  Task<int> GetOnGoingSessionsCount(CancellationToken ct)
+        {
+            var res =  await _db.Sessions.CountAsync(x => x.StartDate < DateTime.Now && x.EndDate > DateTime.Now) ;    
+            return res;
+        }
+
         public async Task<Sessions ?> GetSessionByIdWithTrainerAndCategory(int sessionId, CancellationToken ct)
         {
           return await _db.Sessions.AsNoTracking().Include(x => x.Trainer).Include(x => x.Category).FirstOrDefaultAsync(x => x.Id== sessionId , ct);
             
+        }
+
+        public async Task<int> GetUpComingSessionsCount(CancellationToken ct)
+        {
+            var res = await _db.Sessions.CountAsync(x => x.StartDate > DateTime.Now && x.EndDate > DateTime.Now);
+            return res;
         }
     }
 }
