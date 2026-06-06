@@ -71,6 +71,45 @@ namespace GymManagement.PL.Controllers
             }
         }
 
+        #region Edit
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id , CancellationToken ct)
+        {
+            var session = await _sessionService.GetSessionToUpdateAsync(id , ct );
+            ViewBag.Trainers = new SelectList(await _sessionService.GetAllTrainersForDropDownAsync(ct), "Id", "Name");
+            if (session.Sucess) 
+                return View(session.value);
+            else
+            {
+                TempData["ErrorMessage"] = session.ErrorMessage;
+                    return RedirectToAction (nameof(Index));
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id , SessionToUpdateViewModel model , CancellationToken ct)
+        {
+            if(!ModelState.IsValid)
+            {
+                ViewBag.Trainers = new SelectList(await _sessionService.GetAllTrainersForDropDownAsync(ct), "Id", "Name");
+                return View(model);
+            }
+            var res  = await _sessionService.UpdateSessionAsync(id , model , ct );  
+            if(res.Success)
+            {
+                TempData["SuccessMessage"] = "Session Updated Sucessfully";
+                 return  RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                TempData["ErrorMessage"] = res.ErrorMessage;
+                ViewBag.Trainers = new SelectList(await _sessionService.GetAllTrainersForDropDownAsync(ct), "Id", "Name");
+                return View(model);
+            }
+
+        }
+        #endregion
+
 
 
 

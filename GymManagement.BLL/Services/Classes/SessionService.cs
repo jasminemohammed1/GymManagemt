@@ -105,5 +105,44 @@ namespace GymManagement.BLL.Services.Classes
             return Result<SessionViewModel>.Ok(mappedSession);
 
         }
+
+        public  async Task<Result<SessionToUpdateViewModel>> GetSessionToUpdateAsync(int sessionId, CancellationToken ct)
+        {
+            var session = await _unitOfWork.GetRepository<Sessions>().GetByIdAsync(sessionId, ct);
+            if (session == null) return Result<SessionToUpdateViewModel>.NotFound("Session Not Found");
+            var mappedSession = _mapper.Map<Sessions, SessionToUpdateViewModel>(session);
+            return Result<SessionToUpdateViewModel>.Ok(mappedSession);
+        }
+
+        public async Task<Result> UpdateSessionAsync(int sessionId, SessionToUpdateViewModel model, CancellationToken ct = default)
+        {
+            var session = await  _unitOfWork.GetRepository<Sessions>().GetByIdAsync(sessionId, ct);
+            if (session == null) return Result.NotFound("Session Not Found");
+            // check on session to be updatable or not 
+
+            if (session.StartDate < DateTime.Now) return Result.Validation("Cannot Update on Completed or OngoingSession");
+            var BookingCount =  await _unitOfWork.SessionRepository.GetBookedSlotsAsync(sessionId, ct);
+            if (BookingCount > 0) return Result.Validation("Cannot Update Session with One Booking on it ");
+
+            // check on the model as create 
+
+            if (model.StartDate >= model.EndDate) return Result.Validation("StartDate must be < EndDate");
+            if (model.StartDate < DateTime.Now) return Result.Validation("StartDate Must Be in Future");
+            var trainer = await  _unitOfWork.GetRepository<Trainer>().GetByIdAsync(model.TrainerId, ct);
+            var category = await _unitOfWork.GetRepository<Category>().GetByIdAsync(session.CategoryId);
+            if (trainer == null) return Result.NotFound("Trainer Not Found");
+            var IsValid = Enum.TryParse<Speciality>(session.Category?.CategoryName, true, out Speciality CategorySpeciality);
+            if (!IsValid || trainer.speciality!= CategorySpeciality) return Result.Validation("Trainer Speciality must match Category");
+
+            var mappedSesion = _mapper.Map(model, session);
+            mappedSesion.UpdatedAt = DateTime.Now;
+            _unitOfWork.GetRepository<Sessions>().Update(mappedSesion);
+           var res = await _unitOfWork.SaveChangesAsync(ct);
+            return res > 0 ? Result.Ok() : Result.Fail("Cannot Update Session");
+
+
+
+
+        }
     }
 }

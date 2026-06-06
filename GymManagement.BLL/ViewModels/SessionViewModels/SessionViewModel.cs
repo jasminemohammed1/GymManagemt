@@ -18,7 +18,7 @@ namespace GymManagement.BLL.ViewModels.SessionViewModels
         public int Capacity { get; set; }
 
         public TimeSpan Duration => EndDate - StartDate;
-        public string TimeRangeDisplay => $"{StartDate: hh: mm tt} - {EndDate: hh mm tt}";
+        public string TimeRangeDisplay => $"{StartDate: hh: mm tt} - {EndDate: hh: mm tt}";
         public string DateDisplay => $"{StartDate: MMM dd , yyyy}";
         public string Status
         {
@@ -28,7 +28,7 @@ namespace GymManagement.BLL.ViewModels.SessionViewModels
                     return "Up Coming";
                 else if (EndDate > DateTime.Now && StartDate < DateTime.Now)
                     return "On Going";
-                else
+                else  
                     return "Completed";
 
             }
