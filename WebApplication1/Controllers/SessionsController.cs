@@ -55,6 +55,29 @@ namespace GymManagement.PL.Controllers
         }
         #endregion
 
+        [HttpGet]
+        public async Task<IActionResult> Details(int id , CancellationToken ct )
+        {
+            var session = await  _sessionService.GetSessionByIdAsync(id);
+            if(session.Sucess)
+            {
+                return View(session.value);
+            }
+            else
+            {
+                TempData["ErrorMessage"] = session.ErrorMessage;
+                return RedirectToAction(nameof(Index));
+
+            }
+        }
+
+
+
+
+
+
+
+
 
         private async Task PopulateDropDownList(CancellationToken ct)
         {

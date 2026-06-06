@@ -11,5 +11,6 @@ namespace GymManagement.BLL.Services.interfaces
     {
         public Task<IEnumerable<Sessions>> GetAllSessionsWithTrainerandCategory(CancellationToken ct);
         public Task<int> GetBookedSlotsAsync(int Id ,CancellationToken ct);
+        public Task<Sessions?> GetSessionByIdWithTrainerAndCategory(int sessionId , CancellationToken ct);
     }
 }

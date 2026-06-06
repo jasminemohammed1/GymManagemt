@@ -31,5 +31,11 @@ namespace GymManagement.BLL.Services.Classes
         {
             return await _db.Booking.CountAsync(x => x.SessionId== Id);
         }
+
+        public async Task<Sessions ?> GetSessionByIdWithTrainerAndCategory(int sessionId, CancellationToken ct)
+        {
+          return await _db.Sessions.AsNoTracking().Include(x => x.Trainer).Include(x => x.Category).FirstOrDefaultAsync(x => x.Id== sessionId , ct);
+            
+        }
     }
 }
