@@ -52,6 +52,20 @@ namespace GymManagement.BLL.Services.Classes
 
         }
 
+        public async Task<Result> DeleteSessionAsync(int sessionId, CancellationToken ct = default)
+        {
+            var session = await _unitOfWork.GetRepository<Sessions>().GetByIdAsync(sessionId, ct);
+            if (session == null) return Result.NotFound("Session Not Found");
+            if (session.EndDate > DateTime.Now) return Result.Validation("Cannot Delete OnGoing  Or UpComing Session");
+            var BookingCount = await _unitOfWork.SessionRepository.GetBookedSlotsAsync(sessionId, ct);
+            if (BookingCount > 0) return Result.Validation("Cannot Delete Session With Booking on it");
+            _unitOfWork.GetRepository<Sessions>().Delete(session);
+            var res = await  _unitOfWork.SaveChangesAsync(ct);
+            return res > 0 ? Result.Ok() : Result.Fail("Fail To Delete Session");
+
+
+        }
+
         public async Task<IEnumerable<CetegorySelectViewModel>> GetAllCategoryForDropDownAsync(CancellationToken cancellationToken = default)
         {
             var categories =  await _unitOfWork.GetRepository<Category>().GetAllAsync(ct : cancellationToken);

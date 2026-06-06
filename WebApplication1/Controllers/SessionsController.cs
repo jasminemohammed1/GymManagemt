@@ -3,6 +3,7 @@ using GymManagement.BLL.ViewModels.SessionViewModels;
 using Microsoft.AspNetCore.Http.Metadata;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Threading.Tasks;
 
 namespace GymManagement.PL.Controllers
 {
@@ -109,7 +110,35 @@ namespace GymManagement.PL.Controllers
 
         }
         #endregion
+        #region Delete
 
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id , CancellationToken ct )
+        {
+            var res = await _sessionService.GetSessionByIdAsync(id , ct );
+            if(res.Sucess)
+            return View();
+            else
+            {
+                TempData["ErrorMessage"] = res.ErrorMessage;
+                return RedirectToAction(nameof(Index));
+            }
+
+        }
+
+        [HttpPost]
+
+        public async Task<IActionResult> DeleteConfirmed([FromRoute]int id , CancellationToken ct )
+        {
+            var res = await  _sessionService.DeleteSessionAsync(id , ct );
+
+            TempData[res.Success ? "SuccessMessage" : "ErrorMessage"] = res.Success ? "Session Deleted Sucessfully" : res.ErrorMessage;
+        
+                return RedirectToAction(nameof(Index));
+            
+        }
+
+        #endregion
 
 
 
