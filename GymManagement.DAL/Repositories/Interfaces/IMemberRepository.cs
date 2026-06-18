@@ -11,7 +11,6 @@ namespace GymManagement.DAL.Repositories.Interfaces
     {
         public Task<Member?> GetMemberDetailsAsync(int memberId , CancellationToken ct );
         public Task<Member ?> GetMemberHealthRecord( int memberId , CancellationToken ct );
-        public Task<int> GetMemberCount(CancellationToken ct );
-        public Task<int> GetMemberCountWithActiveMemberShips(CancellationToken ct);
+      
     }
 }

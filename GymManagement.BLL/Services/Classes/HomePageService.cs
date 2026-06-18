@@ -1,6 +1,8 @@
-﻿using GymManagement.BLL.Common;
+﻿using AutoMapper.Execution;
+using GymManagement.BLL.Common;
 using GymManagement.BLL.Services.interfaces;
 using GymManagement.BLL.ViewModels.HomePageViewModel;
+using GymManagement.DAL.Models;
 using GymManagement.DAL.Repositories.Interfaces;
 using Microsoft.Identity.Client;
 using System;
@@ -21,13 +23,13 @@ namespace GymManagement.BLL.Services.Classes
         }
         public async Task<Result<HomePageViewModel>> GetAnalyticAsync(CancellationToken ct = default)
         {
-           
-            var MemberCount =  await unitOfWork.MemberRepository.GetMemberCount(ct);
-            var ActiveMemberCount = await unitOfWork.MemberRepository.GetMemberCountWithActiveMemberShips(ct);
-            var TrainerCount = await unitOfWork.TrainerRepository.GetTrainerCount(ct);
-            var CompletedSessionsCount = await unitOfWork.SessionRepository.GetCompletedSessionsCount(ct);
-            var OnGoingSessionsCount = await unitOfWork.SessionRepository.GetOnGoingSessionsCount(ct);
-            var UpComingSessionsCount = await unitOfWork.SessionRepository.GetUpComingSessionsCount(ct);
+            var date = DateTime.Now;
+            var MemberCount = await unitOfWork.GetRepository<DAL.Models.Member>().CountAsync(ct: ct);
+            var ActiveMemberCount = await unitOfWork.GetRepository<MemberShips>().CountAsync(x => x.EndDate > date, ct);
+            var TrainerCount = await unitOfWork.GetRepository<Trainer>().CountAsync(ct:ct);
+            var CompletedSessionsCount = await unitOfWork.GetRepository<Sessions>().CountAsync(x => x.EndDate < date, ct);
+            var OnGoingSessionsCount = await unitOfWork.GetRepository<Sessions>().CountAsync(x => x.StartDate <= date && x.EndDate > date, ct);
+            var UpComingSessionsCount = await unitOfWork.GetRepository<Sessions>().CountAsync(x => x.EndDate > date , ct);
             var model = new HomePageViewModel()
             {
                 CountActiveMember = ActiveMemberCount,

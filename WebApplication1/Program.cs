@@ -26,7 +26,7 @@ namespace WebApplication1
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<ISessionRepository, SessionRepository>();
             builder.Services.AddScoped<IMemberRepository, MemberRepository>();
-            builder.Services.AddScoped<ITrainerRepository, TrainerRepository>();
+           
             builder.Services.AddScoped<IHomePageService, HomePageService>();  
              
 
