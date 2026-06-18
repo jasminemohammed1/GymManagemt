@@ -8,7 +8,7 @@ namespace GymManagement.DAL.Models
 {
     public class Member : GymUser
     {
-        public string? Photo {  get; set; }
+        public string Photo { get; set; } = default!;
         //joinDate = createdAt
         public HealthRecord HealthRecord { get; set; } = default!;
         public ICollection<MemberShips> MemberShips { get; set; } = new List<MemberShips>();
