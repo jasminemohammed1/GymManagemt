@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GymManagement.BLL.Common;
+using GymManagement.BLL.Services.Attachments;
 using GymManagement.BLL.Services.interfaces;
 using GymManagement.BLL.ViewModels.MemberViewModels;
 using GymManagement.DAL.Models;
@@ -19,13 +20,15 @@ namespace GymManagement.BLL.Services.Classes
 
         private readonly IUnitOfWork _unitofwork;
         private readonly IMapper _mapper;
+        private readonly IAttachmentService attachmentService;
 
-        public MemberService(IUnitOfWork unitOfWork , IMapper mapper) 
+        public MemberService(IUnitOfWork unitOfWork , IMapper mapper , IAttachmentService attachmentService) 
             
         {
             
             _unitofwork = unitOfWork;
             this._mapper = mapper;
+            this.attachmentService = attachmentService;
         }
 
         public async Task<Result> CreateMemberAsync(CreateMemberViewModel createMemberViewModel, CancellationToken ct)
@@ -41,13 +44,31 @@ namespace GymManagement.BLL.Services.Classes
             {
                 return Result.Validation("Phone or Email Exists before");
             }
+
+           var storedPhotoName =  await  attachmentService.UploudAsync(createMemberViewModel.PhotoFile.OpenReadStream(), createMemberViewModel.PhotoFile.FileName,"MembersPhoto" , ct);
+            //if (string.IsNullOrWhiteSpace(storedPhotoName.value)) return Result.Validation($"{storedPhotoName.ErrorMessage}");
+            if (storedPhotoName is null || !storedPhotoName.Sucess) return Result.Validation("can not create Member due to errors in uplouading");
+            if(string.IsNullOrWhiteSpace(storedPhotoName.value)) return Result.Validation("can not create Member due to errors in uplouading");
+
+
             // else create member
 
             var member = _mapper.Map<Member>(createMemberViewModel);
+            member.Photo = storedPhotoName.value;
 
            _unitofwork.GetRepository<Member>().Add(member);
            var res = await  _unitofwork.SaveChangesAsync();
-            return res > 0 ? Result.Ok() : Result.Fail("Cannot Create Member");
+            if(res > 0 )
+            {
+                return Result.Ok();
+            }
+            else
+            {
+                // delete photo 
+                attachmentService.Delete(storedPhotoName.value, "MembersPhoto");
+               return  Result.Fail("Cannot Create Member");
+            }
+               
 
         }
 

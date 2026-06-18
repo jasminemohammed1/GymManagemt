@@ -1,4 +1,5 @@
 using GymManagement.BLL.Services;
+using GymManagement.BLL.Services.Attachments;
 using GymManagement.BLL.Services.Classes;
 using GymManagement.BLL.Services.interfaces;
 using GymManagement.DAL.DataSeading;
@@ -26,6 +27,7 @@ namespace WebApplication1
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<ISessionRepository, SessionRepository>();
             builder.Services.AddScoped<IMemberRepository, MemberRepository>();
+            builder.Services.AddScoped<IAttachmentService , AttachmentService>();   
            
             builder.Services.AddScoped<IHomePageService, HomePageService>();  
              
