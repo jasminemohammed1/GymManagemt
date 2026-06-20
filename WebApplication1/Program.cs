@@ -37,7 +37,11 @@ namespace WebApplication1
 
             builder.Services.AddScoped<ISessionService, SessionService>();
             builder.Services.AddAutoMapper(m => m.AddProfile(new MappingProfile()));
-            builder.Services.AddIdentity<ApplicationUser, IdentityRole>().
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>( opts =>
+            {
+                opts.Lockout.MaxFailedAccessAttempts = 5;
+                opts.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(2);
+            }).
                 AddEntityFrameworkStores<GymDBContext>();
 
          
