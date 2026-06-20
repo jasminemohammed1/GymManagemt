@@ -67,6 +67,12 @@ namespace GymManagement.PL.Controllers
             await signinmanager.SignOutAsync();
             return RedirectToAction(nameof(Login));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> AccessDenied()
+        {
+            return View();
+        }
     } 
 
 }
