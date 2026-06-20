@@ -8,10 +8,12 @@ using System.Runtime.CompilerServices;
 using GYMProject.Models;
 using GymManagement.BLL.Services.interfaces;
 using GymManagement.BLL.ViewModels.PlansViewModel;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace GYMProject.Controllers
 {
+    [Authorize]
     public class PlansController : Controller
     {
         private readonly IPlanService _planService;
