@@ -3,10 +3,12 @@ using GymManagement.BLL.Services.Attachments;
 using GymManagement.BLL.Services.Classes;
 using GymManagement.BLL.Services.interfaces;
 using GymManagement.DAL.DataSeading;
+using GymManagement.DAL.Models;
 using GymManagement.DAL.Repositories.Classes;
 using GymManagement.DAL.Repositories.Interfaces;
 using GymManagement.PL;
 using GYMProject.DBContexts;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
@@ -29,14 +31,22 @@ namespace WebApplication1
             builder.Services.AddScoped<IMemberRepository, MemberRepository>();
             builder.Services.AddScoped<IAttachmentService , AttachmentService>();   
            
-            builder.Services.AddScoped<IHomePageService, HomePageService>();  
+            builder.Services.AddScoped<IHomePageService, HomePageService>(); 
+            
              
 
             builder.Services.AddScoped<ISessionService, SessionService>();
             builder.Services.AddAutoMapper(m => m.AddProfile(new MappingProfile()));
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>().
+                AddEntityFrameworkStores<GymDBContext>();
+
+         
+
+
 
 
             builder.Services.AddScoped<IMemberRepository,MemberRepository>();
+          
             builder.Services.AddDbContext<GymDBContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
